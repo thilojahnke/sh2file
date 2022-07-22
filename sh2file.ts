@@ -5,40 +5,47 @@
 
 import * as winston from 'winston';
 import * as http from 'http';
-//import * as stream from 'stream';
-
-
-
-
-
-// in
-const logger = winston.createLogger({
-	level: 'verbose',	
-	format: winston.format.combine(
-		winston.format.splat(),
-		winston.format.simple(),
-		winston.format.colorize({all: true})
-	),
-		
-	
-	transports: [
-		new winston.transports.Console()
-	]
-});
+import * as arg from 'arg';
+import logger from './logger.js';
 
 logger.log("info",'Programm started');
 
 
-const args = process.argv.slice(2);
+interface Arguments{
+ list: Boolean;
+ all:Boolean;
+ help: Boolean;
+ verbose: Boolean;
+ name:String;
+ message ?: String;
+};
 
-if (args.length !== 1 ){
-	
- 	logger.log("error","Please provide exact one argument: 'List' for only a list of mazes , 'All' for all mazes , 'Name' for the maze  ");
- 	throw new Error("");
-} 
-args.forEach((element:string)=>{
-	logger.log("verbose",element);
+
+
+
+
+const args = arg({
+	'--list' : Boolean,
+	'--all' : Boolean,
+	'--help' : Boolean,
+	'--verbose': Boolean,
+	'--name' : String,
+	'-h' : '--help',
+	'-v' : '--verbose'
 });
+
+for (const [key,value] of Object.entries(args)) {
+	logger.log("verbose",key + ' : ' + value)
+};
+
+const argsInterface = check_arg(args);
+if (argsInterface.message && argsInterface.message.length > 0 ){
+	throw Error(String(argsInterface.message))
+}
+
+if (argsInterface.verbose){
+	logger.level = 'verbose';
+}
 
 //now check if the db is running
 logger.log("verbose","Check for db");
@@ -77,3 +84,57 @@ const dbOptions  = {
 })
  req.end();
  logger.verbose("Check List of Mazes");
+
+
+ function check_arg(arg:arg.Result<any>): Arguments{
+
+  let fargs : Arguments = {list:false,all:false,help:false,verbose:false,name:''};
+  if (Object.keys(arg).length=== 1){
+	fargs.message = 'Missing arguments';
+  }
+  for (const [key,value] of Object.entries(arg)) {
+	switch (key){
+      case '--list': fargs.list = true;
+	  break;
+	  case '--all': fargs.all = true;
+	  break;
+	  case '--help': fargs.help = true;
+	  break;
+	  case '--verbose': fargs.verbose = true;
+	  break;
+	  case '--name': 
+	  if (typeof(value) === 'string'){
+		fargs.name = value;
+	  }
+	  
+
+	  break;
+
+	}
+
+	
+
+
+// when name is set all other options must be false
+ if (fargs.name.length > 0 ){
+     if (fargs.list || fargs.all || fargs.help ){
+		fargs.message = 'Please provide only maze name'
+		return fargs;
+	 }
+ }
+
+ if ( (fargs.list && (fargs.all || fargs.help))||
+     (fargs.all && (fargs.list || fargs.help)) ||
+	  (fargs.help && (fargs.list||fargs.all)) ){
+      fargs.message = 'Please provide only one parameter'
+	return fargs;
+	  }
+
+
+};
+
+  return fargs;
+  
+}
+ 
+ 

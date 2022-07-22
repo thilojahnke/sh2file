@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc": "npx tsc sh2file.ts",
-    "start": "node sh2file.js All",
+    "start": "node sh2file.js --all",
     "runall": "npm-run-all tsc start"
   },
   "author": "",
@@ -17,6 +17,7 @@
     "typescript": "^4.7.4"
   },
   "dependencies": {
+    "arg": "^5.0.2",
     "module-name": "^0.0.1-security",
     "process": "^0.11.10",
     "winston": "^3.8.0"
