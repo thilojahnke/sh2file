@@ -10,7 +10,7 @@ const logger = winston.loggers.get('sh2fileLogger');
 
 
 
-const req = (path:string)=>{
+const req = (path:string):Promise<string>=>{
 	logger.verbose(`Request path: ${path}`);
     return  new Promise((resolve,reject)=>{
 		
@@ -31,31 +31,29 @@ const req = (path:string)=>{
 			 const contentType = res.headers['content-type'];
 			  logger.verbose("Content-Type: "+contentType);
 			 //req.setEncoding('utf8');
-			 let rawData ='';
+			 let rawData:string ='';
 			 
 			 res.on('data',(chunk:string)=>{
 				rawData += chunk;
 			 });
 			 
 			 res.on('end',()=>{
-			  
-			  const parsedData = JSON.parse(rawData);
-			  const received:string = JSON.stringify(parsedData);
-			  logger.verbose(`Request finished: Received :${ received.length } chars` );
-			  resolve(received);
+			  logger.verbose(`Request finished: Received :${ rawData.length } chars` );
+			  resolve(rawData);
 			   
 			
 			
 			})
 		})
+		req.on('error',(err)=>{
+			logger.error("DB returns error ");
+			reject(err);
 
 
-
-	
+			
+		})
+		 req.end();
 })
 }
-
-
-
 
 export default req;

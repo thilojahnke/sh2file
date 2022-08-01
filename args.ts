@@ -2,10 +2,11 @@
 import * as arg from 'arg';
 /* ---------------------- arguments --------------------*/
 interface Arguments{
-    list: Boolean;
-    all:Boolean;
-    help: Boolean;
-    verbose: Boolean;
+    list: boolean;
+    all:boolean;
+    help: boolean;
+    verbose: boolean;
+    version: boolean;
     name:String;
     message ?: String;
    };
@@ -21,7 +22,7 @@ interface Arguments{
 
  function check_arg(arg:arg.Result<any>): Arguments{
 
-    let fargs : Arguments = {list:false,all:false,help:false,verbose:false,name:''};
+    let fargs : Arguments = {list:false,all:false,help:false,verbose:false,version:false, name:''};
     if (Object.keys(arg).length=== 1){
       fargs.message = 'Missing arguments';
     }
@@ -34,6 +35,8 @@ interface Arguments{
         case '--help': fargs.help = true;
         break;
         case '--verbose': fargs.verbose = true;
+        break;
+        case '--version': fargs.version = true;
         break;
         case '--name': 
         if (typeof(value) === 'string'){
@@ -56,9 +59,10 @@ interface Arguments{
        }
    }
   
-   if ( (fargs.list && (fargs.all || fargs.help))||
-       (fargs.all && (fargs.list || fargs.help)) ||
-        (fargs.help && (fargs.list||fargs.all)) ){
+   if ( (fargs.list && (fargs.all || fargs.help || fargs.version ))||
+       (fargs.all && (fargs.list || fargs.help || fargs.version )) ||
+       (fargs.version &&(fargs.list || fargs.help || fargs.all )) ||
+        (fargs.help && (fargs.list||fargs.all || fargs.version )) ){
         fargs.message = 'Please provide only one parameter'
       return fargs;
         }
