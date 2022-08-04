@@ -5,12 +5,7 @@ import logger from './logger.js';
 import req from './request.js';
 import progArgs from './args.js';
 
-
-
-
-
-
-
+// test
 
 const args = arg({
 	'--list' : Boolean,
