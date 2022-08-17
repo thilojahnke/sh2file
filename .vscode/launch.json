@@ -1,0 +1,32 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch Typescript",
+            "program": "${workspaceFolder}/src/sh2file.ts",
+            "request": "launch",
+            "preLaunchTask": "tsc: build - tsconfig.json",
+            "outFiles":["${workspaceFolder}/test/*.js"],
+            "args": ["--list","--verbose"],
+            "console": "integratedTerminal",
+            "type": "node"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Program",
+             "program": "${workspaceFolder}/test/sh2file.js",
+             "args": ["--list","--verbose"],
+             "skipFiles": [
+                "<node_internals>/**"
+            ],            
+            "outFiles": [
+                "${workspaceFolder}/test/*.js"
+            ],
+            "console": "integratedTerminal"
+        }
+    ]
+}

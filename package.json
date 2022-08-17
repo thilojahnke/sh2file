@@ -5,8 +5,9 @@
   "main": "sh2file.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "tsc": "npx tsc sh2file.ts",
-    "start": "node sh2file.js --all",
+    "tsc": "npx tsc src/sh2file.ts",
+    "start": "node test/sh2file.js --all",
+    "writer": "node test/write.js",
     "runall": "npm-run-all tsc start"
   },
   "author": "",

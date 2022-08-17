@@ -1,9 +1,18 @@
-{
+{   "files" : [
+   "src/sh2file.ts",
+   "src/logger.ts",
+   "src/args.ts",
+   "src/request.ts",
+   "src/write.ts"
+
+],
     "compilerOptions": {
       "noImplicitAny": true,
       "module": "commonjs",         
       "target": "es2016",
       "typeRoots": [ "./node_modules/@types"],                        
-      "moduleResolution": "node",        
+      "moduleResolution": "node", 
+      "sourceMap"       : true,
+      "outDir" : "./test"
     }
   }

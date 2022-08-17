@@ -1,4 +1,4 @@
-//const {watch, series} = require("gulp");
+//const {watch, series,parallel} = require("gulp");
 const gulp = require("gulp");
 const sourcemap = require("gulp-sourcemaps");
 const terser = require("gulp-terser");
@@ -14,7 +14,6 @@ function tscompile(){
   var tsProject = ts.createProject("tsconfig.json");
   return gulp.src("src/*.ts").pipe(tsProject()).js.pipe(gulp.dest("test"));
 }
-
 
 function build(){
   var tsProject = ts.createProject("tsconfig.json");
@@ -36,6 +35,8 @@ exports.watch =  function(){
 
 }
 exports.build = gulp.series(build);
+
+
 
 exports.default = tscompile;
 
