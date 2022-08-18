@@ -12,24 +12,29 @@ try {
 
 
 const mazepath = path.resolve(filepath,filename);
+logger.verbose(`try to create file ${mazepath}`);
 
   if (filepath){
     if (!existsSync(filepath)){
-        throw new Error(`path doesn't exits and will never be created`);
+
+        throw new Error(`path doesn't exits and cannot be created with this task`);
     }
   }
-    
+    logger.verbose(`create file ${mazepath}`);
     
     
      
     
     //const data = new Uint8Array(Buffer.from('Hello Node.js'));
-    const promise = writeFile('message.txt', filecontent ,{});
+    const promise = writeFile(mazepath, filecontent ,{});
     
     return promise;
 } catch (err) {
+    logger.error(`File could not be created`);
+    return new Promise((resolve,reject)=>{
+      reject(err);
 
-    console.error(err);
+    });
 }
 }
 //writer("Hello Node","myFirstMaze.txt");

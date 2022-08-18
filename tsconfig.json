@@ -3,7 +3,8 @@
    "src/logger.ts",
    "src/args.ts",
    "src/request.ts",
-   "src/write.ts"
+   "src/write.ts",
+   "src/help.ts"
 
 ],
     "compilerOptions": {

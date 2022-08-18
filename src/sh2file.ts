@@ -1,10 +1,11 @@
-const version = '0.03';
+const version = '0.04';
 
 import * as arg from 'arg';
 import logger from './logger.js';
 import req from './request.js';
 import progArgs from './args.js';
 import writer from './write.js';
+import help from './help.js';
 
 // test
 
@@ -34,6 +35,11 @@ if (argsInterface.version){
 	process.exit();
 }
 
+if (argsInterface.help){
+	console.log(help);
+	process.exit();
+
+}
 
 logger.log("info","Program started");
 
@@ -41,9 +47,11 @@ interface Message{
 	message : string,
 };
 interface MazeList{
+ message ?: string,
   data: [{maze:string,rf:number,start:number,target:number}]
 }
 interface MazeRooms{
+ message ?: string,
  data: [maze:string,Room:number,StartX:number,StartY:number,Provision:number]	
 }
 
@@ -64,8 +72,12 @@ async function sh2file(){
 			logger.log("verbose", `Parameter ALL: ${argsInterface.all} ->  Write all mazes from db to file`);
 			const mazelist = await req('/mazes');
 			const mazes:MazeList = JSON.parse(mazelist);
+			delete mazes["message"];
 			logger.info(`${mazes.data.length} mazes were detected`);
-			
+			if (argsInterface.list){
+				
+				writer(JSON.stringify(mazes),'mazelist.json','./resources');
+			}
 			mazes.data.forEach((element)=>{
 				logger.verbose(JSON.stringify(element));
 				logger.info(`${element.rf}. ${element.maze}`);
@@ -95,7 +107,15 @@ async function singleMaze(maze:string){
 		return;
 	 }
 	 const rooms:MazeRooms = JSON.parse(mazeRooms);
-	 logger.info(`${ rooms.data.length } entries received`)
+	 delete rooms["message"];
+	 logger.info(`${ rooms.data.length } entries received`);
+	 writer(JSON.stringify(rooms),maze+'.json','./resources/mazes')
+	 .then(()=>{
+		logger.info(`${maze} is saved as a file`)
+	 }).catch((error)=>{
+		logger.error(`${error}` );
+		process.exit();
+	 })
 
 	 
 	}
